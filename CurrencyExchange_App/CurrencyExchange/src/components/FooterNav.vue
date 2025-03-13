@@ -14,12 +14,16 @@
       </li>
       <li>
         <RouterLink to="/about"
-          ><img class="navIcons" src="../components/icons/about_icon.png" alt="about_icon"
+          ><img
+            class="navIcons"
+            id="aboutIcon"
+            src="../components/icons/about_icon1.png"
+            alt="about_icon"
         /></RouterLink>
       </li>
       <li>
         <RouterLink to="/contact"
-          ><img class="navIcons" src="../components/icons/contact_icon.png" alt="contact_icon"
+          ><img class="navIcons" src="../components/icons/contact_icon1.png" alt="contact_icon"
         /></RouterLink>
       </li>
     </ul>
@@ -57,7 +61,7 @@ li {
   height: 100%;
 }
 
-.nav-link {
+/* .nav-link {
   display: flex;
   align-items: center;
   justify-content: center;
@@ -65,5 +69,5 @@ li {
   text-decoration: none;
   color: inherit;
   padding: 0 10px;
-}
+} */
 </style>
