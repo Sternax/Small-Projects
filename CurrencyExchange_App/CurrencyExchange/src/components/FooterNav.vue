@@ -4,7 +4,7 @@
     <ul>
       <li>
         <RouterLink to="/">
-          <img class="navIcons" src="../components/icons/exchange_icon.png" alt="exchange_icon" />
+          <img class="navIcons" src="../components/icons/swap.png" alt="exchange_icon" />
         </RouterLink>
       </li>
       <li>
@@ -60,14 +60,4 @@ li {
   justify-content: center;
   height: 100%;
 }
-
-/* .nav-link {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  height: 100%;
-  text-decoration: none;
-  color: inherit;
-  padding: 0 10px;
-} */
 </style>

@@ -7,11 +7,14 @@
 <style scoped>
 #header {
   display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 50px;
 }
 
 #header img {
   width: auto;
-  height: 100px;
+  height: 30px;
   margin: 0 auto;
   display: block;
 }

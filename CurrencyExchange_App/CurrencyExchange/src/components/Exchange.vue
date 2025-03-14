@@ -94,7 +94,6 @@ onMounted(() => {
     <label id="label1" for="currency-select">Select a currency</label>
     <div id="firstCurrencyContainer">
       <v-select
-        id="currency-select"
         v-model="selectedCurrency"
         :options="currencies"
         label="currency"
@@ -121,15 +120,15 @@ onMounted(() => {
       />
     </div>
 
+    <!-- Swap button -->
+    <button id="swapBtn" @click="swapCurrencies">
+      <img src="../components/icons/swap.png" alt="" />
+    </button>
+
     <!-- Second currency to compare dropdown and input -->
     <label id="label2" for="currency-select-two">Compare to</label>
     <div id="secondCurrencyContainer">
-      <v-select
-        id="currency-select-two"
-        v-model="comparisonCurrency"
-        :options="currencies"
-        label="currency"
-      >
+      <v-select v-model="comparisonCurrency" :options="currencies" label="currency">
         <template #option="{ currency }">
           <div style="display: flex; align-items: center">
             <img
@@ -145,12 +144,10 @@ onMounted(() => {
         <p v-if="currencyAmount && selectedCurrency && comparisonCurrency">
           {{ convertedAmount }} {{ comparisonCurrency }}
         </p>
+        <p id="placeholderResult" v-else>Result</p>
       </div>
     </div>
-    <button id="swapBtn" @click="swapCurrencies">
-      Swap
-      <img src="../components/icons/swap.png" alt="" />
-    </button>
+
     <p id="time">{{ time }}</p>
   </div>
 </template>
@@ -163,14 +160,17 @@ onMounted(() => {
   padding-bottom: 20px;
   background-color: #393e46;
   border-radius: 10px;
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 8px 10px rgba(0, 0, 0, 0.1);
   width: 90%;
   height: 100%;
 }
 
 .v-select {
+  width: 200px;
   background-color: white;
-  display: flex;
+  border-radius: 5px;
+  font-family: 'Hanken Grotesk', sans-serif;
+  font-size: 16px;
 }
 
 #time {
@@ -186,70 +186,67 @@ onMounted(() => {
 
   background-color: #222831;
   color: white;
-  font-size: 1.1rem;
+  font-family: 'Hanken Grotesk', sans-serif;
+  font-size: 16px;
   border: none;
   border-radius: 5px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
   height: 30px;
-  width: 100px;
-  padding: 0;
+  padding: 2px;
+  margin-bottom: 10px;
 }
 
 #swapBtn img {
   width: 30px;
   height: 30px;
-  margin-left: 10px;
 }
 
 label {
   font-size: 1.25rem;
   color: white;
   margin-bottom: 5px;
+  font-family: 'Hanken Grotesk', sans-serif;
+  font-size: 1.2rem;
+  font-weight: 400;
 }
 
 #firstCurrencyAmount {
-  width: 80px;
-  height: 20px;
-  padding: 5px;
-  margin-left: 10px;
+  width: 195px;
+  height: 30px;
+  padding: 0 0 0 5px;
+  margin-top: 10px;
   border-radius: 5px;
   border: none;
-}
-
-#secondCurrencyAmount {
-  width: 80px;
-  height: 20px;
-  padding: 5px;
-  margin-left: 10px;
-  border-radius: 5px;
-  border: none;
-  margin-right: 10px;
+  font-family: 'Hanken Grotesk', sans-serif;
+  font-size: 14px;
 }
 
 #firstCurrencyContainer,
 #secondCurrencyContainer {
   margin-bottom: 20px;
   display: flex;
-  justify-content: center;
+  justify-content: space-evenly;
   align-items: center;
-  flex-direction: row;
-}
-
-#currency-select,
-#currency-select-two {
-  width: 100px;
-  height: 30px;
-  border-radius: 5px;
-  border: none;
+  flex-direction: column;
+  width: 300px;
 }
 
 #comparisonResult {
-  font-size: 15px;
-  color: white;
-  margin-left: 10px;
+  font-size: 14px;
+  color: black;
+  font-family: 'Hanken Grotesk', sans-serif;
   height: 30px;
   display: flex;
   align-items: center;
-  width: 90px;
+  width: 195px;
+  background-color: white;
+  border-radius: 5px;
+  padding-left: 5px;
+  margin-top: 10px;
+}
+
+#placeholderResult {
+  color: grey;
 }
 
 .flag-icon {
