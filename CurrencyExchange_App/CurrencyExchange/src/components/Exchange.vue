@@ -184,13 +184,12 @@ onMounted(() => {
   justify-content: center;
   align-items: center;
 
-  background-color: #222831;
+  background-color: transparent;
   color: white;
   font-family: 'Hanken Grotesk', sans-serif;
   font-size: 16px;
   border: none;
   border-radius: 5px;
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
   height: 30px;
   padding: 2px;
   margin-bottom: 10px;
