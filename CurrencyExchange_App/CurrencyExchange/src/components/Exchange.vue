@@ -1,13 +1,14 @@
 <script setup>
-import { ref, onMounted, watch } from 'vue'
+import { ref, onMounted, computed } from 'vue'
 import axios from 'axios'
+import vSelect from 'vue-select'
+import 'vue-select/dist/vue-select.css'
 
 const currencies = ref([])
-const selectedCurrency = ref(null)
-const comparisonCurrency = ref(null)
+const selectedCurrency = ref('USD')
+const comparisonCurrency = ref('SEK')
 const exchangeRates = ref({})
-const currencyAmount = ref('')
-const comparisonAmount = ref('')
+const currencyAmount = ref('') // Keep as string for input binding
 const time = ref('')
 
 //Fetch flags matching the currencies country code eg. USD or SEK
@@ -38,64 +39,41 @@ const fetchCurrencies = async () => {
   }
 }
 
-// Calculate the comparison from the first currency to the second currency
-const calculateComparison = () => {
-  if (selectedCurrency.value && comparisonCurrency.value && currencyAmount.value) {
-    const rate1 = exchangeRates.value[selectedCurrency.value]
-    const rate2 = exchangeRates.value[comparisonCurrency.value]
-    console.log('Rate 1:', rate1)
-    console.log('Rate 2:', rate2)
-
-    const amount = parseFloat(currencyAmount.value)
-    console.log('Amount:', amount)
-
-    if (!isNaN(amount)) {
-      // comparisonAmount.value = (amount * (rate2 / rate1)).toFixed(0)
-      const result = ((amount / rate1) * rate2).toFixed(0)
-      console.log('Result:', result)
-      comparisonAmount.value = result
-    } else {
-      comparisonAmount.value = ''
-    }
-  } else {
-    comparisonAmount.value = ''
+// Switch the currency rate when the currency is changed
+const switchCurrencyRate = async () => {
+  try {
+    const apiKey = '284c17003fd75a314138773b'
+    const response = await axios.get(
+      `https://v6.exchangerate-api.com/v6/${apiKey}/latest/${selectedCurrency.value}`,
+    )
+    currencies.value = Object.keys(response.data.conversion_rates)
+    exchangeRates.value = response.data.conversion_rates
+    time.value = response.data.time_last_update_utc
+  } catch (error) {
+    console.error('Failed to fetch currencies', error)
   }
 }
 
-// Calculate the comparison from the second currency to the first currency
-const calculateReverseComparison = () => {
-  if (selectedCurrency.value && comparisonCurrency.value && comparisonAmount.value) {
-    const rate1 = exchangeRates.value[selectedCurrency.value]
-    const rate2 = exchangeRates.value[comparisonCurrency.value]
-    const amount = parseFloat(comparisonAmount.value)
-
+// Computed property to calculate the converted amount
+const convertedAmount = computed(() => {
+  if (currencyAmount.value && selectedCurrency.value && comparisonCurrency.value) {
+    const rate = exchangeRates.value[comparisonCurrency.value]
+    const amount = parseFloat(currencyAmount.value) // Ensure it's treated as a number
     if (!isNaN(amount)) {
-      currencyAmount.value = (amount * (rate1 / rate2)).toFixed(0)
-    } else {
-      currencyAmount.value = ''
+      return (amount * rate).toFixed(2)
     }
-  } else {
-    currencyAmount.value = ''
   }
-}
-
-// Watch for changes in currencyAmount and update comparisonAmount
-watch(currencyAmount, () => {
-  calculateComparison()
+  return ''
 })
 
-// Watch for changes in comparisonAmount and update currencyAmount
-watch(comparisonAmount, () => {
-  calculateReverseComparison()
-})
-
-// Swap currencies and amounts
+// Swap currencies
 const swapCurrencies = () => {
   ;[selectedCurrency.value, comparisonCurrency.value] = [
     comparisonCurrency.value,
     selectedCurrency.value,
   ]
-  ;[currencyAmount.value, comparisonAmount.value] = [comparisonAmount.value, currencyAmount.value]
+
+  switchCurrencyRate()
 }
 
 const getFlag = (currencyCode) => {
@@ -115,24 +93,28 @@ onMounted(() => {
     <!-- First currency dropdown and input -->
     <label id="label1" for="currency-select">Select a currency</label>
     <div id="firstCurrencyContainer">
-      <select id="currency-select" v-model="selectedCurrency">
-        <option v-for="currency in currencies" :key="currency" :value="currency">
-          {{ currency }}
-        </option>
-      </select>
-
-      <div class="flagContainer">
-        <img
-          class="flag-icon"
-          v-if="selectedCurrency && getFlag(selectedCurrency)"
-          :src="getFlag(selectedCurrency)"
-          :alt="`${selectedCurrency} flag`"
-        />
-      </div>
+      <v-select
+        id="currency-select"
+        v-model="selectedCurrency"
+        :options="currencies"
+        label="currency"
+        @input="switchCurrencyRate"
+      >
+        <template #option="{ currency }">
+          <div style="display: flex; align-items: center">
+            <img
+              :src="getFlag(currency)"
+              :alt="`${currency} flag`"
+              style="width: 20px; height: 15px; margin-right: 10px"
+            />
+            {{ currency }}
+          </div>
+        </template>
+      </v-select>
 
       <input
         id="firstCurrencyAmount"
-        type="text"
+        type="number"
         v-model="currencyAmount"
         placeholder="Amount"
         inputmode="numeric"
@@ -142,28 +124,28 @@ onMounted(() => {
     <!-- Second currency to compare dropdown and input -->
     <label id="label2" for="currency-select-two">Compare to</label>
     <div id="secondCurrencyContainer">
-      <select id="currency-select-two" v-model="comparisonCurrency">
-        <option v-for="currency in currencies" :key="currency" :value="currency">
-          {{ currency }}
-        </option>
-      </select>
-
-      <div class="flagContainer">
-        <img
-          class="flag-icon"
-          v-if="comparisonCurrency && getFlag(comparisonCurrency)"
-          :src="getFlag(comparisonCurrency)"
-          :alt="`${comparisonCurrency} flag`"
-        />
+      <v-select
+        id="currency-select-two"
+        v-model="comparisonCurrency"
+        :options="currencies"
+        label="currency"
+      >
+        <template #option="{ currency }">
+          <div style="display: flex; align-items: center">
+            <img
+              :src="getFlag(currency)"
+              :alt="`${currency} flag`"
+              style="width: 20px; height: 15px; margin-right: 10px"
+            />
+            {{ currency }}
+          </div>
+        </template>
+      </v-select>
+      <div id="comparisonResult">
+        <p v-if="currencyAmount && selectedCurrency && comparisonCurrency">
+          {{ convertedAmount }} {{ comparisonCurrency }}
+        </p>
       </div>
-
-      <input
-        id="secondCurrencyAmount"
-        type="text"
-        v-model="comparisonAmount"
-        placeholder="Amount"
-        inputmode="numeric"
-      />
     </div>
     <button id="swapBtn" @click="swapCurrencies">
       Swap
@@ -183,7 +165,12 @@ onMounted(() => {
   border-radius: 10px;
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
   width: 90%;
-  height: 250px;
+  height: 100%;
+}
+
+.v-select {
+  background-color: white;
+  display: flex;
 }
 
 #time {
@@ -226,7 +213,6 @@ label {
   margin-left: 10px;
   border-radius: 5px;
   border: none;
-  margin-right: 10px;
 }
 
 #secondCurrencyAmount {
@@ -257,10 +243,13 @@ label {
 }
 
 #comparisonResult {
-  margin-top: 20px;
-  font-size: 1.25rem;
+  font-size: 15px;
   color: white;
-  text-align: center;
+  margin-left: 10px;
+  height: 30px;
+  display: flex;
+  align-items: center;
+  width: 90px;
 }
 
 .flag-icon {
