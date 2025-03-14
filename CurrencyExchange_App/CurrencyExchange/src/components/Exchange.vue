@@ -43,10 +43,17 @@ const calculateComparison = () => {
   if (selectedCurrency.value && comparisonCurrency.value && currencyAmount.value) {
     const rate1 = exchangeRates.value[selectedCurrency.value]
     const rate2 = exchangeRates.value[comparisonCurrency.value]
+    console.log('Rate 1:', rate1)
+    console.log('Rate 2:', rate2)
+
     const amount = parseFloat(currencyAmount.value)
+    console.log('Amount:', amount)
 
     if (!isNaN(amount)) {
-      comparisonAmount.value = (amount * (rate2 / rate1)).toFixed(0)
+      // comparisonAmount.value = (amount * (rate2 / rate1)).toFixed(0)
+      const result = ((amount / rate1) * rate2).toFixed(0)
+      console.log('Result:', result)
+      comparisonAmount.value = result
     } else {
       comparisonAmount.value = ''
     }
