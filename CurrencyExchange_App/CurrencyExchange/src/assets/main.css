@@ -1,7 +1,8 @@
 @import url('https://fonts.googleapis.com/css2?family=Hanken+Grotesk:ital,wght@0,100..900;1,100..900&display=swap');
 
 body {
-  background-color: #222831;
+  background: url(../assets/gradient.png);
+  background-size: 1000px 2000px;
   margin: 0;
   padding: 0;
   box-sizing: border-box;

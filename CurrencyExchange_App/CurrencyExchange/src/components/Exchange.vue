@@ -158,17 +158,21 @@ onMounted(() => {
   align-items: center;
   padding-top: 20px;
   padding-bottom: 20px;
-  background-color: #393e46;
+  background-image: url(../assets/gradient.png);
+  background-size: 1000px 1000px;
   border-radius: 10px;
-  box-shadow: 0 8px 10px rgba(0, 0, 0, 0.1);
+  box-shadow:
+    rgba(0, 0, 0, 0.4) 0px 2px 4px,
+    rgba(0, 0, 0, 0.3) 0px 7px 13px -3px,
+    rgba(0, 0, 0, 0.2) 0px -3px 0px inset;
   width: 90%;
   height: 100%;
 }
 
 .v-select {
   width: 200px;
-  background-color: white;
   border-radius: 5px;
+  background-color: white;
   font-family: 'Hanken Grotesk', sans-serif;
   font-size: 16px;
 }
@@ -190,6 +194,12 @@ onMounted(() => {
   font-size: 16px;
   border: none;
   border-radius: 5px;
+  box-shadow:
+    rgba(0, 0, 0, 0.25) 0px 54px 55px,
+    rgba(0, 0, 0, 0.12) 0px -12px 30px,
+    rgba(0, 0, 0, 0.12) 0px 4px 6px,
+    rgba(0, 0, 0, 0.17) 0px 12px 13px,
+    rgba(0, 0, 0, 0.09) 0px -3px 5px;
   height: 30px;
   padding: 2px;
   margin-bottom: 10px;
